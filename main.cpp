@@ -8,15 +8,15 @@
 
 #include <iostream>
 #include <fstream>
-#include <sstream>
-#include <vector>
 
 using namespace std;
 
 // add function
-void add(vector<string> infoList){
-
+/*
+void add(vector<string> infoList, ofstream book){
+    book << infoList[2] << " " << infoList[3] << " " << infoList[4] << endl;
 }
+*/
 // addBook
 // addLibrary
 
@@ -25,41 +25,81 @@ void add(vector<string> infoList){
 
 int main(int argc, char *argv[]){
     
-    ofstream books("bookdb.txt");
-    ofstream libraries("librarydb.txt");
+    ofstream books("booksDB.txt", ios::app);
+
+    ofstream libraries("librariesDB.txt", ios::app);
 
     while(cin){
         // Input from command line of the program
-        string input, temp;
-        vector<string> inputList;
+        char command, subCommand;
 
+        string text;
         cout << ">>> ";
+        cin >> command;
+
+        if(command == 'q')
+            return 0;
+
+        cin >> subCommand;
         // Gets the command line and stores it in 'input'
-        getline(cin,input);
+        getline(cin,text);
+        // Debugging
+        /*
+        cout << command << endl;
+        cout << subCommand << endl;
+        cout << input << endl;
 
-        stringstream stream(input);
+        */
+
+        // ISBN and year, or just ISBN?
+        // Just ISBN, if there is a book witht the same ISBN
+        // there will be now multiple copies
+
+        // if you put in the same book again, either overide it or ignore the add?
+        // ignore the add
+
+        //duplicates of books shall be ignored
+
+        // For libraries the name is the uniqe, and if dubplicate ignore it, give prompt for it
         
-        while(stream >> temp){
-            inputList.push_back(temp);
-        }
+        // For holding in libaries, if the book does not exist in, prompt that it won't be added
+        // Same for if the library does not exist
 
+        //string input;
 
-        if(inputList[0] == "a" && inputList[1] == "b"){
+        // Adding command
+        if(command == 'a'){
             //cout << "You want to add a book" << endl;
-            books << inputList[2] << " " << inputList[3] << " " << inputList[4] << endl;
-        }
-        if(inputList[0] == "a" && inputList[1] == "l"){
-            cout << "You want to add a library" << endl;
-        }
-        if(inputList[0] == "a" && inputList[1] == "h"){
-            cout << "You want to add a book to a specific libary" << endl;
+            if(subCommand == 'b'){
+                books << text << endl;
+            }
+            else if(subCommand == 'l'){
+                libraries << text << endl;
+            }
+            else if(subCommand == 'h')
+                cout << "You want to add a book to a specific libary" << endl;
+
         }
 
-        if(inputList[0] == "l"){
-            cout << "You want list something" << endl;
+        // The list command
+        else if(command == 'l'){
+            ifstream readBooks("booksDB.txt");
+            ifstream readLib("librariesDB.txt");
+
+            string text;
+            if(subCommand == 'b'){
+               while(getline(readBooks,text)) 
+                   cout << text << endl;
+            }
+            if (subCommand == 'l'){
+               while(getline(readLib,text)) 
+                   cout << text << endl;
+            }
+            readBooks.close();
+            readLib.close();
         }
 
-        if(inputList[0] == "f"){
+        else if(command == 'f'){
             cout << "You want find something" << endl;
         }
 
@@ -73,10 +113,9 @@ int main(int argc, char *argv[]){
         // if "l", then check if there is "b" or "l"
         // if "b", list all the books with all it's information
         // if "l", list all the libraries and their information
-        if(input == "q")
-            return 0;
     }
-    book.close();
+    books.close();
+    libraries.close();
 
     return 0;
 }
