@@ -19,6 +19,9 @@ void add(vector<string> infoList, ofstream book){
 */
 // addBook
 // addLibrary
+void find(string ISBN, ifstream file){
+    
+}
 
 // library function
 // find function
@@ -29,11 +32,12 @@ int main(int argc, char *argv[]){
 
     ofstream libraries("librariesDB.txt", ios::app);
 
+    ofstream holdings("holdingsDB.txt", ios::app);
+
     while(cin){
         // Input from command line of the program
         char command, subCommand;
 
-        string text;
         cout << ">>> ";
         cin >> command;
 
@@ -42,7 +46,7 @@ int main(int argc, char *argv[]){
 
         cin >> subCommand;
         // Gets the command line and stores it in 'input'
-        getline(cin,text);
+        
         // Debugging
         /*
         cout << command << endl;
@@ -50,10 +54,6 @@ int main(int argc, char *argv[]){
         cout << input << endl;
 
         */
-
-        // ISBN and year, or just ISBN?
-        // Just ISBN, if there is a book witht the same ISBN
-        // there will be now multiple copies
 
         // if you put in the same book again, either overide it or ignore the add?
         // ignore the add
@@ -69,16 +69,45 @@ int main(int argc, char *argv[]){
 
         // Adding command
         if(command == 'a'){
+            string isbn, author, bookTitle, library, city, zipCode;
+            int year;
             //cout << "You want to add a book" << endl;
+            // Just ISBN, if there is a book witht the same ISBN
+            // there will be no multiple copies
+            // if you put in the same book again, either overide it or ignore the add?
+            // ignore the add
             if(subCommand == 'b'){
-                books << text << endl;
-            }
-            else if(subCommand == 'l'){
-                libraries << text << endl;
-            }
-            else if(subCommand == 'h')
-                cout << "You want to add a book to a specific libary" << endl;
+                cin >> isbn;
+                cin >> year;
+                cin >> author;
+                getline(cin,bookTitle);
 
+                books << isbn << " " << year << " " << author << "  " << bookTitle << endl;
+            }
+            // For libraries the name is the uniqe, and if dubplicate ignore it, give prompt for it
+            else if(subCommand == 'l'){
+                cin >> library;
+                cin >> city;
+                cin >> zipCode;
+
+                libraries << library << " " << city << " " << zipCode << endl;
+            }
+            // For holding in libaries, if the book does not exist in, prompt that it won't be added
+            // Same for if the library does not exist
+            else if(subCommand == 'h'){
+                string isbn, lib, line;
+                ifstream file("booksDB.txt");
+                cin >> isbn;
+                cin >> lib;
+                while(getline(file,line)){
+                    if(line.find(isbn) != string::npos){
+                        holdings << lib << ": " << line << " Copy Number: " << endl;
+                    }
+                }
+                // find the book by it's ISBN
+                //holdings << lib << ": " << line << endl;
+                file.close();
+            }
         }
 
         // The list command
@@ -100,6 +129,7 @@ int main(int argc, char *argv[]){
         }
 
         else if(command == 'f'){
+            string isbn;  
             cout << "You want find something" << endl;
         }
 
