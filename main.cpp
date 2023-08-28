@@ -46,14 +46,6 @@ int main(int argc, char *argv[]){
 
         cin >> subCommand;
         // Gets the command line and stores it in 'input'
-        
-        // Debugging
-        /*
-        cout << command << endl;
-        cout << subCommand << endl;
-        cout << input << endl;
-
-        */
 
         // if you put in the same book again, either overide it or ignore the add?
         // ignore the add
@@ -65,9 +57,7 @@ int main(int argc, char *argv[]){
         // For holding in libaries, if the book does not exist in, prompt that it won't be added
         // Same for if the library does not exist
 
-        //string input;
-
-        // Adding command
+        // Command for adding books, libraries, and holdings
         if(command == 'a'){
             string isbn, author, bookTitle, library, city, zipCode;
             int year;
@@ -99,18 +89,23 @@ int main(int argc, char *argv[]){
                 ifstream file("booksDB.txt");
                 cin >> isbn;
                 cin >> lib;
+                int copyNum = 1;
                 while(getline(file,line)){
                     if(line.find(isbn) != string::npos){
-                        holdings << lib << ": " << line << " Copy Number: " << endl;
+                        holdings << lib << ": " << line << " Copy Number: " << copyNum <<endl;
+                    }
+                    else if(!line.find(isbn)){
+                        holdings << lib << ": " << line << " Copy Number: " << copyNum++ << endl;
                     }
                 }
-                // find the book by it's ISBN
+                // find the book by it's ISBN and check if there is a copy of it
+                // else add the book as the first copy
                 //holdings << lib << ": " << line << endl;
                 file.close();
             }
         }
 
-        // The list command
+        // Command to list books and libraries
         else if(command == 'l'){
             ifstream readBooks("booksDB.txt");
             ifstream readLib("librariesDB.txt");
@@ -120,7 +115,8 @@ int main(int argc, char *argv[]){
                while(getline(readBooks,text)) 
                    cout << text << endl;
             }
-            if (subCommand == 'l'){
+
+            if(subCommand == 'l'){
                while(getline(readLib,text)) 
                    cout << text << endl;
             }
@@ -128,24 +124,27 @@ int main(int argc, char *argv[]){
             readLib.close();
         }
 
+        // Command to find a boook by its ISBN
         else if(command == 'f'){
-            string isbn;  
-            cout << "You want find something" << endl;
+            string isbn, line;
+            cin >> isbn;
+            ifstream holdFile("holdingsDB.txt");
+
+            while(getline(holdFile,line)){
+                if(line.find(isbn) != string::npos){
+                    cout << line << endl;
+                    
+                }
+            }
+                
+            holdFile.close();
         }
 
 
-        //cout << input << endl;     
-         
-        // if "a", then check if it is a book, library, or "h"
-        // if book, add all information about it to the file
-        // if library, add the library to the file
-
-        // if "l", then check if there is "b" or "l"
-        // if "b", list all the books with all it's information
-        // if "l", list all the libraries and their information
     }
     books.close();
     libraries.close();
+    holdings.close();
 
     return 0;
 }

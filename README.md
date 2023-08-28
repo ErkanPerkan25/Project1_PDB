@@ -7,4 +7,5 @@ The project is focused on:
 * Author: Eric Hansson
 * Date:
 * Platform: Arch Linux
-* 
+* Any bugs with the program:
+* Summary: 
