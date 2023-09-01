@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -85,23 +86,36 @@ int main(int argc, char *argv[]){
             // For holding in libaries, if the book does not exist in, prompt that it won't be added
             // Same for if the library does not exist
             else if(subCommand == 'h'){
-                string isbn, lib, line;
-                ifstream file("booksDB.txt");
+                string isbn, lib, lineHold, lineBook;
                 cin >> isbn;
                 cin >> lib;
+
+                ifstream file("booksDB.txt");
+                ifstream hold("holdingsDB.txt");
+                
                 int copyNum = 1;
-                while(getline(file,line)){
-                    if(line.find(isbn) != string::npos){
-                        holdings << lib << ": " << line << " Copy Number: " << copyNum <<endl;
-                    }
-                    else if(!line.find(isbn)){
-                        holdings << lib << ": " << line << " Copy Number: " << copyNum++ << endl;
+    
+                // Goes through the holdings Database
+                while(getline(hold,lineHold)){
+                    if(lineHold.find(isbn) != string::npos && lineHold.find(lib) != string::npos){
+                        copyNum++;
                     }
                 }
+
+                while(getline(file,lineBook)){
+                    if(lineBook.find(isbn) != string::npos){
+                        holdings << lib << ": " << lineBook << " Copy Number: " << copyNum << endl;
+                    }
+                }
+
+                //cout << copyNum << endl;
+                //holdings << lib << ": " << line << " Copy Number: " << copyNum << endl;
+
                 // find the book by it's ISBN and check if there is a copy of it
                 // else add the book as the first copy
                 //holdings << lib << ": " << line << endl;
                 file.close();
+                hold.close();
             }
         }
 
@@ -133,7 +147,6 @@ int main(int argc, char *argv[]){
             while(getline(holdFile,line)){
                 if(line.find(isbn) != string::npos){
                     cout << line << endl;
-                    
                 }
             }
                 
