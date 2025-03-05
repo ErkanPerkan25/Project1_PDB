@@ -11,10 +11,10 @@ Platform: Arch Linux <br>
 
 * Any special steps to compile the project:
 I compile the code with a makefile which creates a executbale called "exe"
-<br>
+
 * Any bugs with the program: 
 If the ISBN number is 123456 and you try to add 123, it won't work as it find 123 in the sequence.
-<br>
+
 * Summary: 
 For this project I first drew out how I would save the data in different files. After that I started to focus on
 writing down the commands and what sub-commands they would have and what they would do. When I hade that done I started
